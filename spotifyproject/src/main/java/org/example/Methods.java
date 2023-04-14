@@ -10,9 +10,24 @@ import java.util.stream.Stream;
 
 class Methods {
 	//ClientID, ClientSecret and RedirectURL are all accessible in the Spotify Developer Dashboard
-	static String CLIENT_ID = "564b169e25a74324b0ed5e5d1f2065fc";
-	static String CLIENT_SECRET = "8484636cd03b487cb3390069b660dd9f";
-	static URI REDIRECT_URI = URI.create("http://localhost:8888/callback");
+
+	//*-------------------------This is an implementation of Encapsulation-------------------------*
+	private static final String CLIENT_ID = "564b169e25a74324b0ed5e5d1f2065fc";
+	private static final String CLIENT_SECRET = "8484636cd03b487cb3390069b660dd9f";
+	private static final URI REDIRECT_URI = URI.create("http://localhost:8888/callback");
+
+	public static String getClientId() {
+		return CLIENT_ID;
+	}
+
+	public static String getClientSecret() {
+		return CLIENT_SECRET;
+	}
+
+	public static URI getRedirectUri() {
+		return REDIRECT_URI;
+	}
+
 
 	//Method that reads file and extracts authCode to a string
 	static String readCodeFromFile() throws IOException {
@@ -61,18 +76,23 @@ class Methods {
 		}
 	}
 
-	//Getters
-	public static String getID() {
-		return CLIENT_ID;
+	static String getRefreshToken(URI uri) {
+		Map<String, String> queryParams = Stream.of(uri.getQuery().split("&"))
+				.map(pair -> pair.split("="))
+				.collect(Collectors.toMap(parts -> parts[0], parts -> parts[1]));
+		return queryParams.get("token");
 	}
-
-	public static String getSECRET() {
-		return CLIENT_SECRET;
+	static void saveRefreshToken(String token) {
+		try {
+			File file = new File("refresh_token.txt");
+			FileWriter writer = new FileWriter(file);
+			writer.write(token);
+			writer.flush();
+			writer.close();
+			System.out.println("refresh_token saved at: " + file.getAbsolutePath());
+		} catch (IOException e) {
+			System.out.println("Error saving refresh_token: " + e.getMessage());
+		}
 	}
-
-	public static URI getURI() {
-		return REDIRECT_URI;
-	}
-
 }
 
