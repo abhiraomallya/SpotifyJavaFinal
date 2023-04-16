@@ -9,9 +9,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 class Methods {
-	//ClientID, ClientSecret and RedirectURL are all accessible in the Spotify Developer Dashboard
 
-	//*-------------------------This is an implementation of Encapsulation-------------------------*
+	//ClientID, ClientSecret and RedirectURL are all accessible in the Spotify Developer Dashboard
+	//*------------------------This is an implementation of Encapsulation------------------------*
 	private static final String CLIENT_ID = "564b169e25a74324b0ed5e5d1f2065fc";
 	private static final String CLIENT_SECRET = "8484636cd03b487cb3390069b660dd9f";
 	private static final URI REDIRECT_URI = URI.create("http://localhost:8888/callback");
@@ -27,7 +27,6 @@ class Methods {
 	public static URI getRedirectUri() {
 		return REDIRECT_URI;
 	}
-
 
 	//Method that reads file and extracts authCode to a string
 	static String readCodeFromFile() throws IOException {
@@ -82,6 +81,7 @@ class Methods {
 				.collect(Collectors.toMap(parts -> parts[0], parts -> parts[1]));
 		return queryParams.get("token");
 	}
+
 	static void saveRefreshToken(String token) {
 		try {
 			File file = new File("refresh_token.txt");

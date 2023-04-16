@@ -23,7 +23,6 @@ import se.michaelthelin.spotify.requests.data.personalization.simplified.GetUser
 import se.michaelthelin.spotify.requests.data.users_profile.GetCurrentUsersProfileRequest;
 
 
-
 class Server {
 	private static final int PORT = 8888;
 
