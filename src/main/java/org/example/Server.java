@@ -1,4 +1,4 @@
-package org.example;
+package SpotifyJavaDemoGit.src.main.java.org.example;
 
 import java.io.IOException;
 
