@@ -19,7 +19,7 @@ class App extends Component {
 
   getTopArtists = async (e) => {
     e.preventDefault();
-    const artistList = await fetch('http://localhost:8888/top-artists')
+    const artistList = await fetch('http://localhost:8888/top-artists', { mode: 'cors' })
       .then(function(response){
         return response.json()
       })
