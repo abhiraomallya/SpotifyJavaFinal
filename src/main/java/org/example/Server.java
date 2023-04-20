@@ -1,4 +1,4 @@
-package SpotifyJavaDemoGit.src.main.java.org.example;
+package org.example;
 
 import java.io.IOException;
 
@@ -20,8 +20,6 @@ import se.michaelthelin.spotify.model_objects.specification.Artist;
 import se.michaelthelin.spotify.model_objects.specification.Paging;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeRequest;
 import se.michaelthelin.spotify.requests.data.personalization.simplified.GetUsersTopArtistsRequest;
-import se.michaelthelin.spotify.requests.data.users_profile.GetCurrentUsersProfileRequest;
-
 
 class Server {
 	private static final int PORT = 8888;
@@ -31,6 +29,7 @@ class Server {
 		server.createContext("/", new InitialHandler());
 		server.createContext("/callback", new CallbackHandler());
 		server.createContext("/top-artists", new TopArtistsHandler());
+		server.createContext("/top-artists-long", new TopArtistsHandlerLong());
 		server.setExecutor(null);
 		server.start();
 		System.out.println("Server started at http://localhost:" + PORT);
@@ -51,11 +50,7 @@ class Server {
 
 
 	public static List<String> getTopArtists() throws Exception {
-		SpotifyApi spotifyApi = new SpotifyApi.Builder()
-				.setClientId(Methods.getClientId())
-				.setClientSecret(Methods.getClientSecret())
-				.setRedirectUri(Methods.getRedirectUri())
-				.build();
+		SpotifyApi spotifyApi = Methods.getSpotifyApi();
 
 		// reads authCode from the file
 		String authorizationCode = Methods.readCodeFromFile();
@@ -64,15 +59,17 @@ class Server {
 		try {
 			AuthorizationCodeCredentials authorizationCodeCredentials = authorizationCodeRequest.execute();
 			spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
+			Methods.saveRefreshToken(authorizationCodeCredentials.getRefreshToken()); // Save the refresh token
 		} catch (IOException | SpotifyWebApiException e) {
 			System.out.println("Error: " + e.getMessage());
 		} catch (ParseException e) {
 			throw new RuntimeException(e);
 		}
 
-		// gets Spotify user profile info
-		GetCurrentUsersProfileRequest getCurrentUsersProfileRequest = spotifyApi.getCurrentUsersProfile().build();
-		String userId = getCurrentUsersProfileRequest.execute().getId();
+		// Refresh the access token if necessary using the refresh token
+		String refreshToken = Methods.readRefreshTokenFromFile();
+		String newAccessToken = Methods.refreshAccessToken(refreshToken);
+		spotifyApi.setAccessToken(newAccessToken);
 
 		// get top artists of that user over a medium term
 		GetUsersTopArtistsRequest getUsersTopArtistsRequest = spotifyApi.getUsersTopArtists()
@@ -90,7 +87,8 @@ class Server {
 		return topArtists;
 	}
 
-	static class TopArtistsHandler implements HttpHandler {
+
+		static class TopArtistsHandler implements HttpHandler {
 		@Override
 		public void handle(HttpExchange exchange) throws IOException {
 			if (!"GET".equals(exchange.getRequestMethod())) {
@@ -126,24 +124,88 @@ class Server {
 		public void handle(HttpExchange exchange) throws IOException {
 			URI requestURI = exchange.getRequestURI();
 			String code = Methods.getAuthCode(requestURI);
-			String token = Methods.getRefreshToken(requestURI);
 
 			if (code != null) {
 				Methods.saveAuthCode(code);
-				Methods.saveRefreshToken(token);
 				String response = "<html><body><h1>Authorization successful.</h1></body></html>";
 				exchange.sendResponseHeaders(200, response.length());
-				OutputStream os = exchange.getResponseBody();
-				os.write(response.getBytes());
-				os.close();
-			} else {
-				String response = "<html><body><h1>Authorization failed.</h1></body></html>";
-				exchange.sendResponseHeaders(400, response.length());
-				OutputStream os = exchange.getResponseBody();
-				os.write(response.getBytes());
-				os.close();
+					OutputStream os = exchange.getResponseBody();
+					os.write(response.getBytes());
+					os.close();
+				} else {
+					String response = "<html><body><h1>Authorization failed.</h1></body></html>";
+					exchange.sendResponseHeaders(400, response.length());
+					OutputStream os = exchange.getResponseBody();
+					os.write(response.getBytes());
+					os.close();
+				}
 			}
 		}
-	}
+
+		public static List<String> getTopArtistsLong() throws Exception {
+			SpotifyApi spotifyApi = Methods.getSpotifyApi();
+
+			// reads authCode from the file
+			String authorizationCode = Methods.readCodeFromFile();
+			// utilizes authCode to make API requests
+			AuthorizationCodeRequest authorizationCodeRequest = spotifyApi.authorizationCode(authorizationCode).build();
+			try {
+				AuthorizationCodeCredentials authorizationCodeCredentials = authorizationCodeRequest.execute();
+				spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
+				Methods.saveRefreshToken(authorizationCodeCredentials.getRefreshToken()); // Save the refresh token
+			} catch (IOException | SpotifyWebApiException e) {
+				System.out.println("Error: " + e.getMessage());
+			} catch (ParseException e) {
+				throw new RuntimeException(e);
+			}
+
+			// Refresh the access token if necessary using the refresh token
+			String refreshToken = Methods.readRefreshTokenFromFile();
+			String newAccessToken = Methods.refreshAccessToken(refreshToken);
+			spotifyApi.setAccessToken(newAccessToken);
+
+			// get top artists of that user over a medium term
+			GetUsersTopArtistsRequest getUsersTopArtistsRequest = spotifyApi.getUsersTopArtists()
+					.time_range("long_term")
+					.limit(10) // set number of top artists to retrieve
+					.build();
+			Paging<Artist> artists = getUsersTopArtistsRequest.execute();
+
+			// extract artist names and add to list
+			List<String> topArtistsLong = new ArrayList<>();
+			for (Artist artist : artists.getItems()) {
+				topArtistsLong.add(artist.getName());
+			}
+
+			return topArtistsLong;
+		}
+		static class TopArtistsHandlerLong implements HttpHandler {
+			@Override
+			public void handle(HttpExchange exchange) throws IOException {
+				if (!"GET".equals(exchange.getRequestMethod())) {
+					exchange.sendResponseHeaders(405, -1); // 405 Method Not Allowed
+					return;
+				}
+
+				try {
+					List<String> topArtists = getTopArtistsLong(); // This method should fetch the top artists
+
+					// Convert topArtists list to JSON
+					Gson gson = new Gson();
+					String topArtistsJson = gson.toJson(topArtists);
+
+					// Set the response headers and send the JSON data
+					exchange.getResponseHeaders().add("Content-Type", "application/json");
+					exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*"); // Add CORS header
+					exchange.sendResponseHeaders(200, topArtistsJson.length());
+					OutputStream os = exchange.getResponseBody();
+					os.write(topArtistsJson.getBytes());
+					os.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+					exchange.sendResponseHeaders(500, -1); // 500 Internal Server Error
+				}
+			}
+		}
 }
 
