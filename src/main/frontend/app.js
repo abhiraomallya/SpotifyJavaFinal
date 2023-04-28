@@ -1,19 +1,19 @@
-document.getElementById('fetch-artists').addEventListener('click', async () => {
+async function fetchAndDisplayArtists(url, artistListId) {
     try {
-        const response = await fetch('http://localhost:8888/top-artists');
+        const response = await fetch(url);
         if (!response.ok) {
-            throw new Error('Failed to fetch top artists');
+            throw new Error(`Failed to fetch artists from ${url}`);
         }
 
         const artists = await response.json();
-        displayTopArtists(artists);
+        displayArtists(artists, artistListId);
     } catch (err) {
         console.error(err);
     }
-});
+}
 
-function displayTopArtists(artists) {
-    const artistList = document.getElementById('artist-list');
+function displayArtists(artists, artistListId) {
+    const artistList = document.getElementById(artistListId);
     artistList.innerHTML = '';
 
     artists.forEach((artist, index) => {
@@ -23,28 +23,14 @@ function displayTopArtists(artists) {
     });
 }
 
+document.getElementById('fetch-artists').addEventListener('click', async () => {
+    await fetchAndDisplayArtists('http://localhost:8888/top-artists', 'artist-list');
+});
 
 document.getElementById('fetch-artists-long').addEventListener('click', async () => {
-    try {
-        const response = await fetch('http://localhost:8888/top-artists-long');
-        if (!response.ok) {
-            throw new Error('Failed to fetch top artists long');
-        }
-
-        const artists = await response.json();
-        displayTopArtistsLong(artists);
-    } catch (err) {
-        console.error(err);
-    }
+    await fetchAndDisplayArtists('http://localhost:8888/top-artists-long', 'artist-list-long');
 });
 
-function displayTopArtistsLong(artists) {
-    const artistList = document.getElementById('artist-list-long');
-    artistList.innerHTML = '';
-
-    artists.forEach((artist, index) => {
-        const listItem = document.createElement('li');
-        listItem.textContent = `${index + 1}. ${artist}`;
-        artistList.appendChild(listItem);
-    });
-}
+document.getElementById('fetch-artists-short').addEventListener('click', async () => {
+    await fetchAndDisplayArtists('http://localhost:8888/top-artists-short', 'artist-list-short');
+});

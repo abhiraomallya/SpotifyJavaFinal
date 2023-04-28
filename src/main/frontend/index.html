@@ -2,17 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Spotify Top Artists</title>
+    <title>Spotify Toppers</title>
     <link rel="stylesheet" href="styles.css">
     <script defer src="app.js"></script>
 </head>
 <body>
-<h1>Spotify Top Artists</h1>
-<button id="fetch-artists">Get Top Artists</button>
-<ul id="artist-list"></ul>
-
-<h1>Spotify Top Artists Long</h1>
-<button id="fetch-artists-long">Get Top Artists Long</button>
-<ul id="artist-list-long"></ul>
+<div>
+    <h1>Short-Term (4-weeks)</h1>
+    <button id="fetch-artists-short">Show Artists</button>
+    <ul id="artist-list-short"></ul>
+</div>
+<div>
+    <h1>Medium-Term (6 months)</h1>
+    <button id="fetch-artists">Show Artists</button>
+    <ul id="artist-list"></ul>
+</div>
+<div>
+    <h1>Long-Term (all time)</h1>
+    <button id="fetch-artists-long">Show Artists</button>
+    <ul id="artist-list-long"></ul>
+</div>
 </body>
 </html>
