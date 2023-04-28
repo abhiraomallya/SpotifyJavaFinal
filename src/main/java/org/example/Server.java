@@ -204,7 +204,7 @@ class Server {
 			}
 
 			try {
-				HashMap<String, String> topTracks = getTopTracks(timeRange);
+				List<String> topTracks = getTopTracks(timeRange);
 
 				// Convert topTracks list to JSON
 				Gson gson = new Gson();
