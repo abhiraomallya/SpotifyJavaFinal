@@ -7,20 +7,45 @@
     <script defer src="app.js"></script>
 </head>
 <body>
-<div>
-    <h1>Short-Term (4-weeks)</h1>
-    <button id="fetch-artists-short">Show Artists</button>
-    <ul id="artist-list-short"></ul>
+<div id="column1">
+    <h1><em>Artists</em></h1>
+    <div class="subcolumn-container">
+        <div class="subcolumn1">
+            <h2>Short-Term (4-weeks)</h2>
+            <button id="fetch-artists-short">Show Artists</button>
+            <ul id="artist-list-short"></ul>
+        </div>
+        <div class="subcolumn2">
+            <h2>Medium-Term (6 months)</h2>
+            <button id="fetch-artists">Show Artists</button>
+            <ul id="artist-list"></ul>
+        </div>
+        <div class="subcolumn3">
+            <h2>Long-Term (all-time)</h2>
+            <button id="fetch-artists-long">Show Artists</button>
+            <ul id="artist-list-long"></ul>
+        </div>
+    </div>
 </div>
-<div>
-    <h1>Medium-Term (6 months)</h1>
-    <button id="fetch-artists">Show Artists</button>
-    <ul id="artist-list"></ul>
-</div>
-<div>
-    <h1>Long-Term (all time)</h1>
-    <button id="fetch-artists-long">Show Artists</button>
-    <ul id="artist-list-long"></ul>
+<div id="column2">
+    <h1><em>Tracks</em></h1>
+    <div class="subcolumn-container">
+        <div class="subcolumn1">
+            <h2>Short-Term (4-weeks)</h2>
+            <button id="fetch-tracks-short">Show Tracks</button>
+            <ul id="track-list-short"></ul>
+        </div>
+        <div class="subcolumn2">
+            <h2>Medium-Term (6-months)</h2>
+            <button id="fetch-tracks">Show Tracks</button>
+            <ul id="track-list"></ul>
+        </div>
+        <div class="subcolumn3">
+            <h2>Long-Term (all-time)</h2>
+            <button id="fetch-tracks-long">Show Tracks</button>
+            <ul id="track-list-long"></ul>
+        </div>
+    </div>
 </div>
 </body>
 </html>

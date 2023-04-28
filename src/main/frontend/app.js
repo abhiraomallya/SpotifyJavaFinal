@@ -34,3 +34,15 @@ document.getElementById('fetch-artists-long').addEventListener('click', async ()
 document.getElementById('fetch-artists-short').addEventListener('click', async () => {
     await fetchAndDisplayArtists('http://localhost:8888/top-artists-short', 'artist-list-short');
 });
+
+document.getElementById('fetch-tracks').addEventListener('click', async () => {
+    await fetchAndDisplayArtists('http://localhost:8888/top-tracks', 'track-list');
+});
+
+document.getElementById('fetch-tracks-long').addEventListener('click', async () => {
+    await fetchAndDisplayArtists('http://localhost:8888/top-tracks-long', 'track-list-long');
+});
+
+document.getElementById('fetch-tracks-short').addEventListener('click', async () => {
+    await fetchAndDisplayArtists('http://localhost:8888/top-tracks-short', 'track-list-short');
+});
