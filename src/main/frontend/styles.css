@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Sawarabi Gothic', sans-serif;
     font-size: 22px;
     max-width: 1600px;
     margin: 0 auto;
@@ -7,8 +7,15 @@ body {
     background: #121212;
     color: white;
 }
+#header {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
 
 h1 {
+    display: flex;
+    justify-content: center;
     margin-bottom: -5px;
     margin-left: 15px;
     margin-top: 5px;
@@ -26,11 +33,10 @@ button {
     border-radius: 35px;
     color: white;
     cursor: pointer;
-    font-size: 2rem;
+    font-size: 2.5rem;
     padding: 10px 20px;
-    margin-top: 5px;
-    margin-bottom: -5px;
-    outline: 1px solid white;
+    margin-top: 15px;
+    outline: 1px solid rgb(0, 0, 0);
     -webkit-text-stroke: 1px black;
     justify-content: center;
 
@@ -38,6 +44,7 @@ button {
 
 button:hover {
     background-color: #1ed760;
+    box-shadow: 0 4px 4px 0 rgb(126, 125, 125)
 }
 
 ul {
@@ -47,19 +54,24 @@ ul {
     font-size: 16px;
 }
 
-.subcolumn-container {
+.nav-bar {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    flex: auto;
+    justify-content: center;
     align-items: stretch;
 }
 
-.subcolumn1,
-.subcolumn2,
-.subcolumn3 {
-    flex-basis: 30%;
-    margin: 5px;
-    padding: 20px 20px 10px 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+.dropdown-menu{
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-menu:hover .dropdown-options {
+    display: block;
+}
+
+.dropdown-options {
+    display: none;
+    position: absolute;
+    padding: 10px;
 }

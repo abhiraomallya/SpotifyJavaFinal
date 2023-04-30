@@ -3,49 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <title>Spotify Toppers</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sawarabi+Gothic&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <script defer src="app.js"></script>
 </head>
 <body>
-<div id="column1">
-    <h1><em>Artists</em></h1>
-    <div class="subcolumn-container">
-        <div class="subcolumn1">
-            <h2>Short-Term (4-weeks)</h2>
-            <button id="fetch-artists-short">Show Artists</button>
-            <ul id="artist-list-short"></ul>
+<div id="header">
+    <h1><em>Spotify Top Artists/ Tracks</em></h1>
+    <div class="nav-bar">
+        <div class="dropdown-menu">
+            <button class="drop-btn">Artists</button>
+            <div class="dropdown-options">
+                <div id="artists-short">Short Term</div>
+                <div id="artists-medium">Medium Term</div>
+                <div id="artists-long">Long Term</div>
+            </div>
         </div>
-        <div class="subcolumn2">
-            <h2>Medium-Term (6 months)</h2>
-            <button id="fetch-artists">Show Artists</button>
-            <ul id="artist-list"></ul>
-        </div>
-        <div class="subcolumn3">
-            <h2>Long-Term (all-time)</h2>
-            <button id="fetch-artists-long">Show Artists</button>
-            <ul id="artist-list-long"></ul>
-        </div>
+        <div class="dropdown-menu"></div>
     </div>
 </div>
-<div id="column2">
-    <h1><em>Tracks</em></h1>
-    <div class="subcolumn-container">
-        <div class="subcolumn1">
-            <h2>Short-Term (4-weeks)</h2>
-            <button id="fetch-tracks-short">Show Tracks</button>
-            <ul id="track-list-short"></ul>
-        </div>
-        <div class="subcolumn2">
-            <h2>Medium-Term (6-months)</h2>
-            <button id="fetch-tracks">Show Tracks</button>
-            <ul id="track-list"></ul>
-        </div>
-        <div class="subcolumn3">
-            <h2>Long-Term (all-time)</h2>
-            <button id="fetch-tracks-long">Show Tracks</button>
-            <ul id="track-list-long"></ul>
-        </div>
-    </div>
-</div>
-</body>
-</html>
