@@ -1,0 +1,54 @@
+body {
+    font-family: 'Sawarabi Gothic', sans-serif;
+    font-size: 26px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #222222;
+    color: white;
+}
+
+  
+/* Style the main content */
+main {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    flex: 1 1 auto;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+h1 {
+    font-size: 4em;
+}
+
+.content p {
+    font-size: 2em;
+}
+
+.login {
+    background-color: #1fdf64;
+    border-radius: 25px;
+    padding: 15px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 1.5rem;
+}
+  
+/* Style the footer */
+footer {
+    background-color: #1DB954;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+}
+  
+
