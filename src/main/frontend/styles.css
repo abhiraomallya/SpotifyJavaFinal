@@ -2,6 +2,7 @@ body {
     font-family: 'Sawarabi Gothic', sans-serif;
     font-size: 26px;
     max-width: 100vw;
+    max-height: 100vh;
     margin: 0 auto;
     background: #222222;
     color: white;
@@ -39,9 +40,9 @@ h1 {
 
 ul {
     list-style: none;
-    margin-left: -40px;
+    padding: 15px;
     margin-bottom: 0;
-    font-size: 16px;
+    font-size: 1.25em;
 }
 
 .nav-bar {
@@ -70,18 +71,20 @@ ul {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    width: 177.31px;
     padding: 5px 0;
-    width: 100%;
     background-color: #1fdf64;
     border-radius: 0 0 25px 25px;
     border: none;
     color: white;
     cursor: pointer;
     font-size: 1.25rem;
+    position: absolute;
 }
 
 .options-btn {
     padding: 10px;
+    position: relative;
 }
 
 .options-btn:hover {
@@ -93,11 +96,11 @@ ul {
 }
 
 #artist-selector:hover {
-    border-radius: 25px 0 25px 25px;
+    border-radius: 25px 0 0 0;
 }
 
 #track-selector:hover {
-    border-radius: 0 25px 25px 25px;
+    border-radius: 0 25px 0 0;
 }
 
 #artist-selector:hover .dropdown-options {
