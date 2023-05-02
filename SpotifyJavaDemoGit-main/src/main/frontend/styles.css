@@ -1,0 +1,131 @@
+body {
+    font-family: 'Sawarabi Gothic', sans-serif;
+    font-size: 26px;
+    max-width: 100vw;
+    min-height: 100vh;
+    background: #222222;
+    color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    flex: 1 1 auto;
+}
+
+.header {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    padding: 0px 20px;
+}
+
+h1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    font-size: 3em;
+}
+
+.drop-btn {
+    color: white;
+    cursor: pointer;
+    font-size: 2rem;
+    padding: 5px 40px;
+    text-align: center;
+}
+
+ul {
+    list-style: none;
+    padding: 15px;
+    margin-bottom: 0;
+    font-size: 1.25em;
+}
+
+.nav-bar {
+    overflow: hidden;
+}
+
+
+.dropdown-menu{
+    float: left;
+    background-color: #1fdf64;
+    border: none;
+}
+
+
+#artist-selector {
+    border-radius: 25px 0 0 25px;
+}
+
+
+#track-selector {
+    border-radius: 0 25px 25px 0;
+}
+
+.dropdown-options {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 177.31px;
+    padding: 5px 0;
+    background-color: #1fdf64;
+    border-radius: 0 0 25px 25px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 1.25rem;
+    position: absolute;
+}
+
+.options-btn {
+    padding: 10px;
+    position: relative;
+}
+
+img {
+    margin-top: auto;
+    margin-bottom: 15px;
+}
+
+footer {
+    background-color: #1DB954;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+}
+
+.options-btn:hover {
+    background-color: #1cc055;
+}
+
+.dropdown-menu:hover {
+    background-color: #1cc055;
+}
+
+#artist-selector:hover {
+    border-radius: 25px 0 0 0;
+}
+
+#track-selector:hover {
+    border-radius: 0 25px 0 0;
+}
+
+#artist-selector:hover .dropdown-options {
+    display: flex;
+}
+
+#track-selector:hover .dropdown-options {
+    display: flex;
+}
+
+
+
+

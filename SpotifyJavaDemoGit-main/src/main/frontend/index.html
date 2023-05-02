@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Spotify Toppers</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sawarabi+Gothic&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="app.js"></script>
+</head>
+<body>
+    <main>
+        <div class="header">
+            <h1>Spotify Stat Tracker</h1>
+            <div class="nav-bar">
+                <div class="dropdown-menu" id="artist-selector">
+                    <div class="drop-btn">Artists</div>
+                    <div class="dropdown-options">
+                        <div id="artists-short" class="options-btn">Short Term</div>
+                        <div id="artists-medium" class="options-btn">Medium Term</div>
+                        <div id="artists-long" class="options-btn">Long Term</div>
+                    </div>
+                </div>
+                <div class="dropdown-menu" id="track-selector">
+                    <div class="drop-btn">Tracks</div>
+                    <div class="dropdown-options">
+                        <div id="tracks-short" class="options-btn">Short Term</div>
+                        <div id="tracks-medium" class="options-btn">Medium Term</div>
+                        <div id="tracks-long" class="options-btn">Long Term</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <ul id="display"></ul>
+        </div>
+        <img src = "SpotifyStats.png" width="250" height="200" alt = "Test Image" />
+    </main>
+    <footer>
+        <p>&copy; 2023 CIS111B Spotify Stat Tracker. Follow the project on <a style= color:greenyellow href=https://github.com/lonebrow/SpotifyJavaDemoGit > Github!</a></p>
+    </footer>
+</body>
