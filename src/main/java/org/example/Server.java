@@ -17,6 +17,7 @@ import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
 import se.michaelthelin.spotify.model_objects.specification.Artist;
+import se.michaelthelin.spotify.model_objects.specification.ArtistSimplified;
 import se.michaelthelin.spotify.model_objects.specification.Paging;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeRequest;
 import se.michaelthelin.spotify.requests.data.personalization.simplified.GetUsersTopArtistsRequest;
@@ -172,7 +173,16 @@ class Server {
 		// Extract track names and add to list
 		List<String> topTracks = new ArrayList<>();
 		for (Track track : tracks.getItems()) {
-			topTracks.add(track.getName());
+			String artistString = "";
+			if(track.getArtists().length == 1){
+				ArtistSimplified[] artistArray = track.getArtists();
+				artistString = artistArray[0].getName();
+			} else {
+				for (ArtistSimplified artist : track.getArtists()) {
+				artistString = artistString + artist.getName() + ", ";
+				}
+			}
+			topTracks.add(track.getName() + " - " + artistString);
 		}
 
 		return topTracks;
