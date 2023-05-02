@@ -106,7 +106,7 @@ class Server {
 		// get top artists of that user over a given term
 		GetUsersTopArtistsRequest getUsersTopArtistsRequest = spotifyApi.getUsersTopArtists()
 				.time_range(timeRange)
-				.limit(15) // set number of top artists to retrieve
+				.limit(10) // set number of top artists to retrieve
 				.build();
 		Paging<Artist> artists = getUsersTopArtistsRequest.execute();
 
@@ -120,40 +120,17 @@ class Server {
 	}
 
 
-	static class TopArtistsHandler implements HttpHandler {
-		private final String timeRange;
-
+	static class TopArtistsHandler extends BaseHandler {
 		public TopArtistsHandler(String timeRange) {
-			this.timeRange = timeRange;
+			super(timeRange);
 		}
 
 		@Override
-		public void handle(HttpExchange exchange) throws IOException {
-			if (!"GET".equals(exchange.getRequestMethod())) {
-				exchange.sendResponseHeaders(405, -1); // 405 Method not allowed
-				return;
-			}
-
-			try {
-				List<String> topArtists = getTopArtists(timeRange); // This method should fetch the top artists
-
-				// Convert topArtists list to JSON
-				Gson gson = new Gson();
-				String topArtistsJson = gson.toJson(topArtists);
-
-				// Set the response headers and send the JSON data
-				exchange.getResponseHeaders().add("Content-Type", "application/json");
-				exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*"); // Add CORS header
-				exchange.sendResponseHeaders(200, topArtistsJson.length());
-				OutputStream os = exchange.getResponseBody();
-				os.write(topArtistsJson.getBytes());
-				os.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-				exchange.sendResponseHeaders(500, -1); // 500 Internal Server Error
-			}
+		protected List<String> getData(String timeRange) throws Exception {
+			return getTopArtists(timeRange);
 		}
 	}
+
 
 	public static List<String> getTopTracks(String timeRange) throws Exception {
 		SpotifyApi spotifyApi = Methods.getSpotifyApi();
@@ -166,20 +143,20 @@ class Server {
 		// Get the top tracks of the user over a given term
 		GetUsersTopTracksRequest getUsersTopTracksRequest = spotifyApi.getUsersTopTracks()
 				.time_range(timeRange)
-				.limit(15) // Set the number of top tracks to retrieve
+				.limit(10) // Set the number of top tracks to retrieve
 				.build();
 		Paging<Track> tracks = getUsersTopTracksRequest.execute();
 
 		// Extract track names and add to list
 		List<String> topTracks = new ArrayList<>();
 		for (Track track : tracks.getItems()) {
-			String artistString = "";
-			if(track.getArtists().length == 1){
+			StringBuilder artistString = new StringBuilder();
+			if (track.getArtists().length == 1) {
 				ArtistSimplified[] artistArray = track.getArtists();
-				artistString = artistArray[0].getName();
+				artistString = new StringBuilder(artistArray[0].getName());
 			} else {
 				for (ArtistSimplified artist : track.getArtists()) {
-				artistString = artistString + artist.getName() + ", ";
+					artistString.append(artist.getName()).append(", ");
 				}
 			}
 			topTracks.add(track.getName() + " - " + artistString);
@@ -188,39 +165,53 @@ class Server {
 		return topTracks;
 	}
 
-	static class TopTracksHandler implements HttpHandler {
-		private final String timeRange;
-
+	static class TopTracksHandler extends BaseHandler {
 		public TopTracksHandler(String timeRange) {
+			super(timeRange);
+		}
+
+		@Override
+		protected List<String> getData(String timeRange) throws Exception {
+			return getTopTracks(timeRange);
+		}
+	}
+
+	abstract static class BaseHandler implements HttpHandler {
+		protected final String timeRange;
+
+		public BaseHandler(String timeRange) {
 			this.timeRange = timeRange;
 		}
+
+		protected abstract List<String> getData(String timeRange) throws Exception;
 
 		@Override
 		public void handle(HttpExchange exchange) throws IOException {
 			if (!"GET".equals(exchange.getRequestMethod())) {
-				exchange.sendResponseHeaders(405, -1); // 405 Method not allowed
+				exchange.sendResponseHeaders(405, -1);
 				return;
 			}
 
 			try {
-				List<String> topTracks = getTopTracks(timeRange);
+				List<String> data = getData(timeRange);
 
-				// Convert topTracks list to JSON
+				// Convert data list to JSON
 				Gson gson = new Gson();
-				String topTracksJson = gson.toJson(topTracks);
+				String dataJson = gson.toJson(data);
 
 				// Set the response headers and send the JSON data
 				exchange.getResponseHeaders().add("Content-Type", "application/json");
-				exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*"); // Add CORS header
-				exchange.sendResponseHeaders(200, topTracksJson.length());
+				exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
+				exchange.sendResponseHeaders(200, dataJson.length());
 				OutputStream os = exchange.getResponseBody();
-				os.write(topTracksJson.getBytes());
+				os.write(dataJson.getBytes());
 				os.close();
 			} catch (Exception e) {
 				e.printStackTrace();
-				exchange.sendResponseHeaders(500, -1); // 500 Internal Server Error
+				exchange.sendResponseHeaders(500, -1);
 			}
 		}
 	}
+
 }
 

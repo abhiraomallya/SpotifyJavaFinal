@@ -1,11 +1,20 @@
 async function fetchAndDisplayAPIData(url, dataListID) {
     try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`Failed to fetch data from ${url}`);
+        let dataEntries = null;
+        const cachedData = sessionStorage.getItem(url);
+        if (cachedData) {
+            dataEntries = JSON.parse(cachedData);
+        } else {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch data from ${url}`);
+            }
+
+            dataEntries = await response.json();
+            sessionStorage.setItem(url, JSON.stringify(dataEntries));
         }
 
-        const dataEntries = await response.json();
+        console.log(dataEntries);
         displayArtists(dataEntries, dataListID);
     } catch (err) {
         console.error(err);
@@ -25,7 +34,7 @@ function displayArtists(artists) {
 }
 
 document.getElementById('artists-medium').addEventListener('click', async () => {
-    await fetchAndDisplayAPIData('http://localhost:8888/top-artists');
+    await fetchAndDisplayAPIData('http://localhost:8888/top-artists-medium');
 });
 
 document.getElementById('artists-long').addEventListener('click', async () => {
@@ -37,7 +46,7 @@ document.getElementById('artists-short').addEventListener('click', async () => {
 });
 
 document.getElementById('tracks-medium').addEventListener('click', async () => {
-    await fetchAndDisplayAPIData('http://localhost:8888/top-tracks');
+    await fetchAndDisplayAPIData('http://localhost:8888/top-tracks-medium');
 });
 
 document.getElementById('tracks-long').addEventListener('click', async () => {
@@ -47,3 +56,4 @@ document.getElementById('tracks-long').addEventListener('click', async () => {
 document.getElementById('tracks-short').addEventListener('click', async () => {
     await fetchAndDisplayAPIData('http://localhost:8888/top-tracks-short');
 });
+
