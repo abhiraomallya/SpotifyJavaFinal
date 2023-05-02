@@ -65,7 +65,7 @@ class Server {
 
 			if (code != null) {
 				Methods.saveAuthCode(code);
-				String response = "<html><body><h1>Authorization successful.</h1></body></html>";
+				String response = "Authorization successful.";
 				exchange.sendResponseHeaders(200, response.length());
 				OutputStream os = exchange.getResponseBody();
 				os.write(response.getBytes());
