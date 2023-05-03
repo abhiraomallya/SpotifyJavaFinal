@@ -27,6 +27,7 @@ import se.michaelthelin.spotify.requests.data.personalization.simplified.GetUser
 
 class Server {
 	private static final int PORT = 8888;
+	//private static boolean authorized = false;
 
 	public static void startServer() throws Exception {
 		HttpServer server = HttpServer.create(new InetSocketAddress(PORT), 0);
@@ -65,7 +66,8 @@ class Server {
 
 			if (code != null) {
 				Methods.saveAuthCode(code);
-				String response = "<html><body><h1>Authorization successful.</h1></body></html>";
+				String response = "<html><body><h1 id='verified'>Authorization successful.</h1>"+
+				"<a href='https://getlucky13.github.io/SpotifyStats/main.html'>Click here to continue.</a></body></html>";
 				exchange.sendResponseHeaders(200, response.length());
 				OutputStream os = exchange.getResponseBody();
 				os.write(response.getBytes());
@@ -79,6 +81,7 @@ class Server {
 			}
 		}
 	}
+	
 
 
 	public static List<String> getTopArtists(String timeRange) throws Exception {
