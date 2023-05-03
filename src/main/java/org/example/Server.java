@@ -33,7 +33,6 @@ class Server {
 		HttpServer server = HttpServer.create(new InetSocketAddress(PORT), 0);
 		server.createContext("/", new InitialHandler());
 		server.createContext("/callback", new CallbackHandler());
-		//server.createContext("/authorized", new AuthorizationHandler());
 		server.createContext("/top-artists-short", new TopArtistsHandler("short_term"));
 		server.createContext("/top-artists", new TopArtistsHandler("medium_term"));
 		server.createContext("/top-artists-long", new TopArtistsHandler("long_term"));
@@ -66,9 +65,9 @@ class Server {
 			String code = Methods.getAuthCode(requestURI);
 
 			if (code != null) {
-				//authorized = true;
 				Methods.saveAuthCode(code);
-				String response = "<html><body><h1 id='verified'>Authorization successful. Click here to continue.</h1></body></html>";
+				String response = "<html><body><h1 id='verified'>Authorization successful.</h1>"+
+				"<a href='https://getlucky13.github.io/SpotifyStats/main.html'>Click here to continue.</a></body></html>";
 				exchange.sendResponseHeaders(200, response.length());
 				OutputStream os = exchange.getResponseBody();
 				os.write(response.getBytes());
@@ -83,34 +82,7 @@ class Server {
 		}
 	}
 	
-	//AuthHandler is all new, dont know if even necessary
-	/*static class AuthorizationHandler implements HttpHandler{
-		@Override
-		public void handle(HttpExchange exchange) throws IOException {
-			if (!"GET".equals(exchange.getRequestMethod())) {
-				exchange.sendResponseHeaders(405, -1);
-				return;
-			}
 
-			try {
-
-				// Convert data list to JSON
-				Gson gson = new Gson();
-				String dataJson = gson.toJson(authorized);
-
-				// Set the response headers and send the JSON data
-				exchange.getResponseHeaders().add("Content-Type", "application/json");
-				exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
-				exchange.sendResponseHeaders(200, dataJson.length());
-				OutputStream os = exchange.getResponseBody();
-				os.write(dataJson.getBytes());
-				os.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-				exchange.sendResponseHeaders(500, -1);
-			}
-		}
-	}*/
 
 	public static List<String> getTopArtists(String timeRange) throws Exception {
 		SpotifyApi spotifyApi = Methods.getSpotifyApi();

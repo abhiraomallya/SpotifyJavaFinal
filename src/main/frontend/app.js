@@ -26,28 +26,6 @@ function authorizeUser(){
     location.href="https://accounts.spotify.com/authorize?response_type=code&client_id=564b169e25a74324b0ed5e5d1f2065fc&redirect_uri=http%3A%2F%2Flocalhost%3A8888%2Fcallback&scope=user-read-private+user-read-email+user-top-read";
 }
 
-/*async function checkAuthorized(){
-    try {
-        const response = await(fetch("http://localhost:8888/authorized"));
-        if (!response.ok) {
-            throw new Error(`Failed to authorize`);
-        }
-        let authorized = await response.json();
-        displayMainPage(authorized);
-    } catch (err) {
-        console.error(err);
-        throw err;
-    }
-}
-
-function displayMainPage(authorized){
-    if(authorized){
-        window.location.href='index.html';
-    } else {
-        window.location.href='splash.html';
-    }
-}*/
-
 function displayArtists(artists) {
     const artistList = document.getElementById("display");
     artistList.innerHTML = '';
@@ -60,10 +38,6 @@ function displayArtists(artists) {
 }
 //this is new
 document.getElementById('login').addEventListener('click', () => { authorizeUser() });
-
-/*document.getElementById('verified').addEventListener('click', async () => {
-    await checkAuthorized();
-});*/
 
 document.getElementById('artists-medium').addEventListener('click', async () => {
     await fetchAndDisplayAPIData('http://localhost:8888/top-artists-medium');
