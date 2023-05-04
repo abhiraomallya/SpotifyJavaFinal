@@ -66,8 +66,8 @@ class Server {
 
 			if (code != null) {
 				Methods.saveAuthCode(code);
-				String response = "<html><body><h1 id='verified'>Authorization successful.</h1>"+
-				"<a href='https://getlucky13.github.io/SpotifyStats/main.html'>Click here to continue.</a></body></html>";
+				String response = "<html><body><h1 id='verified'>Authorization successful.</h1></body>"+
+				"<script>window.location.href='https://getlucky13.github.io/SpotifyStats/main.html'</script></html>";
 				exchange.sendResponseHeaders(200, response.length());
 				OutputStream os = exchange.getResponseBody();
 				os.write(response.getBytes());
