@@ -37,6 +37,7 @@ class Methods {
 	public static URI getRedirectUri() {
 		return REDIRECT_URI;
 	}
+
 	public static SpotifyApi getSpotifyApi() {
 		return spotifyApi;
 	}

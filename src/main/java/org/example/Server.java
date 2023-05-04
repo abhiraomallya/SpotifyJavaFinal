@@ -81,7 +81,6 @@ class Server {
 			}
 		}
 	}
-	
 
 
 	public static List<String> getTopArtists(String timeRange) throws Exception {
@@ -205,7 +204,7 @@ class Server {
 				// Set the response headers and send the JSON data
 				exchange.getResponseHeaders().add("Content-Type", "application/json");
 				exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
-				exchange.sendResponseHeaders(200, dataJson.length());
+				exchange.sendResponseHeaders(200, dataJson.getBytes().length);
 				OutputStream os = exchange.getResponseBody();
 				os.write(dataJson.getBytes());
 				os.close();
