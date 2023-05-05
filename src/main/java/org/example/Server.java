@@ -29,7 +29,6 @@ import se.michaelthelin.spotify.requests.data.personalization.simplified.GetUser
  */
 class Server {
 	private static final int PORT = 8888;
-	//private static boolean authorized = false;
 
 	/**
 	 * Method to start backend server. Creates an HttpServer object with various contexts to handle
@@ -116,14 +115,14 @@ class Server {
 	}
 
 	/**
-	 * Static method for making a request to the Spotify API for users top Artists in a given time range.
+	 * Static method for making a request to the Spotify API for users top artists in a given time range.
 	 * @param timeRange String used for setting the time range of request sent
 	 * @return List<String> containg the names of the users top artists over the given time range, in order.
 	 * @throws Exception
 	 */
 	public static List<String> getTopArtists(String timeRange) throws Exception {
 
-		// Creates SotifyApi object from authorized user credentials
+		// Creates SotifyApi object
 		SpotifyApi spotifyApi = Methods.getSpotifyApi();
 
 		// Reads authCode from the file
@@ -157,7 +156,7 @@ class Server {
 		// using time range passed as argument.
 		GetUsersTopArtistsRequest getUsersTopArtistsRequest = spotifyApi.getUsersTopArtists()
 				.time_range(timeRange)
-				.limit(10) // set number of top artists to retrieve
+				.limit(10) // Sets number of top artists to retrieve
 				.build();
 
 		// Executes request, which returns a Paging object of Artist objects. Paging is a collection object
@@ -176,12 +175,22 @@ class Server {
 		return topArtists;
 	}
 
-
+	/**
+	 * Subclass of BaseHandler used for handling top artist requests from frontend
+	 */
 	static class TopArtistsHandler extends BaseHandler {
+		/**
+		 * Constructor that creates a TopArtistsHandler object with a given time range
+		 * @param timeRange String value representing the time range of the requested data
+		 */
 		public TopArtistsHandler(String timeRange) {
 			super(timeRange);
 		}
 
+		/**
+		 * Implementation of abstract method getData from BaseHandler base class.
+		 * Calls getTopArtists using the timeRange field of the TopArtistsHandler class.
+		 */
 		@Override
 		protected List<String> getData(String timeRange) throws Exception {
 			return getTopArtists(timeRange);
@@ -189,22 +198,36 @@ class Server {
 	}
 
 
+	/** Static method for making a request to the Spotify API for users top Tracks in a given time range.
+	 * @param timeRange String value representing the time range to use for request
+	 * @return List<String> where each String contains the track name and artists of each Track object. 
+	 * @throws Exception
+	 */
 	public static List<String> getTopTracks(String timeRange) throws Exception {
+		// Creates SpotifyApi object
 		SpotifyApi spotifyApi = Methods.getSpotifyApi();
 
-		// Refresh the access token if necessary using the refresh token
+		// Refreshs AccessToken if necessary using RefreshToken
 		String refreshToken = Methods.readRefreshTokenFromFile();
 		String newAccessToken = Methods.refreshAccessToken(refreshToken);
 		spotifyApi.setAccessToken(newAccessToken);
 
-		// Get the top tracks of the user over a given term
+		// Create a GetUsersTopTracksRequest object from SpotifyApi object for querying Spotify servers
+		// using time range passed as argument.
 		GetUsersTopTracksRequest getUsersTopTracksRequest = spotifyApi.getUsersTopTracks()
 				.time_range(timeRange)
-				.limit(10) // Set the number of top tracks to retrieve
+				.limit(10) // Sets the number of top tracks to retrieve
 				.build();
+
+		// Executes request, which returns a Paging object of Track objects. Paging is a collection object
+		// of the SpotifyAPI Java Wrapper representing the response from Spotify, containing information about
+		// the response itself, as well as an array of Track objects representing the users requested top
+		// artists.
 		Paging<Track> tracks = getUsersTopTracksRequest.execute();
 
-		// Extract track names and add to list
+		// Loops through the array of Track objects stored in the Paging object tracks, getting the name and artists
+		// of each Track and storing them together as a single String, and then adding them to the topTracks 
+		// ArrayList.
 		List<String> topTracks = new ArrayList<>();
 		for (Track track : tracks.getItems()) {
 			StringBuilder artistString = new StringBuilder();
@@ -222,11 +245,18 @@ class Server {
 		return topTracks;
 	}
 
+	/**
+	 * Subclass of BaseHandler used for handling top tracks requests from frontend
+	 */
 	static class TopTracksHandler extends BaseHandler {
 		public TopTracksHandler(String timeRange) {
 			super(timeRange);
 		}
 
+		/**
+		 * Implementation of abstract method getData from BaseHandler base class.
+		 * Calls getTopTrackss using the timeRange field of the TopArtistsHandler class.
+		 */
 		@Override
 		protected List<String> getData(String timeRange) throws Exception {
 			return getTopTracks(timeRange);
@@ -260,6 +290,7 @@ class Server {
 		 */
 		@Override
 		public void handle(HttpExchange exchange) throws IOException {
+			// Handles improper fetch requests
 			if (!"GET".equals(exchange.getRequestMethod())) {
 				exchange.sendResponseHeaders(405, -1);
 				return;
