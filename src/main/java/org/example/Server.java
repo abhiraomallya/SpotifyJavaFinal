@@ -24,11 +24,18 @@ import se.michaelthelin.spotify.requests.data.personalization.simplified.GetUser
 import se.michaelthelin.spotify.model_objects.specification.Track;
 import se.michaelthelin.spotify.requests.data.personalization.simplified.GetUsersTopTracksRequest;
 
-
+/**
+ * This class handles the backend server's functions.
+ */
 class Server {
 	private static final int PORT = 8888;
 	//private static boolean authorized = false;
 
+	/**
+	 * Method to start backend server. Creates an HttpServer object with various contexts to handle
+	 * the various calls to the backend made by the frontend.
+	 * @throws Exception
+	 */
 	public static void startServer() throws Exception {
 		HttpServer server = HttpServer.create(new InetSocketAddress(PORT), 0);
 		server.createContext("/", new InitialHandler());
@@ -44,8 +51,17 @@ class Server {
 		System.out.println("Server started at http://localhost:" + PORT);
 	}
 
-	// Handler for the initial server launch
+	/**
+	 * Implementation of HttpHandler interface for handling initial context.
+	 */
 	static class InitialHandler implements HttpHandler {
+		/**
+		 * Overide of handle method for handling an exchange with the frontend. Takes an HttpExchange object as an 
+		 * argument and sends a very simple html page to the front end with a message notifying user that the 
+		 * server has launched correctly.
+		 * @param exchange HttpExchange object sent from frontend
+		 * @throws IOException
+		 */
 		@Override
 		public void handle(HttpExchange exchange) throws IOException {
 			String response = "<html><body><h1>Server launched!</h1></body></html>";
@@ -57,8 +73,19 @@ class Server {
 	}
 
 
-	// Handler for the authorization response
+	/**
+	 * Implementation of HttpHandler interface to handle authorization response.
+	 */
 	static class CallbackHandler implements HttpHandler {
+		/**
+		 * Overide of handle method for handling response HttpExchange after user authorization.
+		 * After user signs into Spotify account, they are redirected to /callback context. 
+		 * This redirection includes the users auth code in the URL, necessary for communicating with the
+		 * Spotify API. This method first extracts the users auth code from the url and saves it to a file
+		 * before redirecting the user to the main page of the frontend.
+		 * @param exchange HttpExchange returned from authorization server after user is authorized
+		 * @throws IOException
+		 */
 		@Override
 		public void handle(HttpExchange exchange) throws IOException {
 			URI requestURI = exchange.getRequestURI();
