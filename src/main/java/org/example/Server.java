@@ -117,12 +117,12 @@ class Server {
 
 	/**
 	 * Static method for making a request to the Spotify API for users top Artists in a given time range.
-	 * 
-	 * @param timeRange
-	 * @return
+	 * @param timeRange String used for setting the time range of request sent
+	 * @return List<String> containg the names of the users top artists over the given time range, in order.
 	 * @throws Exception
 	 */
 	public static List<String> getTopArtists(String timeRange) throws Exception {
+
 		// Creates SotifyApi object from authorized user credentials
 		SpotifyApi spotifyApi = Methods.getSpotifyApi();
 
@@ -159,10 +159,15 @@ class Server {
 				.time_range(timeRange)
 				.limit(10) // set number of top artists to retrieve
 				.build();
-		//Executes request, which returns a Paging object of Artist objects 
+
+		// Executes request, which returns a Paging object of Artist objects. Paging is a collection object
+		// of the SpotifyAPI Java Wrapper representing the response from Spotify, containing information about
+		// the response itself, as well as an array of Artist objects representing the users requested top
+		// artists.
 		Paging<Artist> artists = getUsersTopArtistsRequest.execute();
 
-		// extract artist names and add to list
+		// Loops through the array of Artist objects stored in the Paging object artists, getting the name of
+		// each Artist object and adding it to the List as a String. 
 		List<String> topArtists = new ArrayList<>();
 		for (Artist artist : artists.getItems()) {
 			topArtists.add(artist.getName());
@@ -228,15 +233,31 @@ class Server {
 		}
 	}
 
+	/**
+	 * Abstract class used to implement HttpHandler interface, to then extend for use in handling the
+	 * various requests to the backend from the frontend.
+	 */
 	abstract static class BaseHandler implements HttpHandler {
 		protected final String timeRange;
 
+		/** Constructor for creating a BaseHandler with a given time range
+		 * @param timeRange String value stored in timeRange field
+		 */
 		public BaseHandler(String timeRange) {
 			this.timeRange = timeRange;
 		}
 
+		/**Abstract method to be used for handling GET requests from frontend for data from Spotify API.
+		 * @param timeRange String value representing time range of requested data
+		 * @return List<String> representing the requested date from Spotify API
+		 * @throws Exception
+		 */
 		protected abstract List<String> getData(String timeRange) throws Exception;
 
+		/**
+		 * Override of handle method for handling GET requests from frontend. Converts requested data
+		 * to JSON, configured the response to the frontend, and sends.
+		 */
 		@Override
 		public void handle(HttpExchange exchange) throws IOException {
 			if (!"GET".equals(exchange.getRequestMethod())) {
@@ -245,13 +266,14 @@ class Server {
 			}
 
 			try {
+				// Creates List<String> containing requested data
 				List<String> data = getData(timeRange);
 
-				// Convert data list to JSON
+				// Converts data to JSON
 				Gson gson = new Gson();
 				String dataJson = gson.toJson(data);
 
-				// Set the response headers and send the JSON data
+				// Sets the response headers and send the JSON data to frontend
 				exchange.getResponseHeaders().add("Content-Type", "application/json");
 				exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
 				exchange.sendResponseHeaders(200, dataJson.getBytes().length);
