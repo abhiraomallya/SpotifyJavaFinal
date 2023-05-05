@@ -27,7 +27,7 @@ import se.michaelthelin.spotify.requests.data.personalization.simplified.GetUser
 /**
  * This class handles the backend server's functions.
  */
-class Server {
+public class Server {
 	private static final int PORT = 8888;
 
 	/**
@@ -53,7 +53,7 @@ class Server {
 	/**
 	 * Implementation of HttpHandler interface for handling initial context.
 	 */
-	static class InitialHandler implements HttpHandler {
+	public static class InitialHandler implements HttpHandler {
 		/**
 		 * Overide of handle method for handling an exchange with the frontend. Takes an HttpExchange object as an 
 		 * argument and sends a very simple html page to the front end with a message notifying user that the 
@@ -75,7 +75,7 @@ class Server {
 	/**
 	 * Implementation of HttpHandler interface to handle authorization response.
 	 */
-	static class CallbackHandler implements HttpHandler {
+	public static class CallbackHandler implements HttpHandler {
 		/**
 		 * Overide of handle method for handling response HttpExchange after user authorization.
 		 * After user signs into Spotify account, they are redirected to /callback context. 
@@ -178,7 +178,7 @@ class Server {
 	/**
 	 * Subclass of BaseHandler used for handling top artist requests from frontend
 	 */
-	static class TopArtistsHandler extends BaseHandler {
+	public static class TopArtistsHandler extends BaseHandler {
 		/**
 		 * Constructor that creates a TopArtistsHandler object with a given time range
 		 * @param timeRange String value representing the time range of the requested data
@@ -248,7 +248,7 @@ class Server {
 	/**
 	 * Subclass of BaseHandler used for handling top tracks requests from frontend
 	 */
-	static class TopTracksHandler extends BaseHandler {
+	public static class TopTracksHandler extends BaseHandler {
 		public TopTracksHandler(String timeRange) {
 			super(timeRange);
 		}
@@ -267,7 +267,7 @@ class Server {
 	 * Abstract class used to implement HttpHandler interface, to then extend for use in handling the
 	 * various requests to the backend from the frontend.
 	 */
-	abstract static class BaseHandler implements HttpHandler {
+	public abstract static class BaseHandler implements HttpHandler {
 		protected final String timeRange;
 
 		/** Constructor for creating a BaseHandler with a given time range
