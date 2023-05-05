@@ -17,32 +17,63 @@ class Methods {
 
 	//ClientID, ClientSecret and RedirectURL are all accessible in the Spotify Developer Dashboard
 	//*------------------------This is an implementation of Encapsulation------------------------*
+	/**
+	 * Required value provided by Spotify to authorize application to interact with API.
+	 */
 	private static final String CLIENT_ID = "564b169e25a74324b0ed5e5d1f2065fc";
+
+	/**
+	 * Required value provided by Spotify to authorize application to interact with API.
+	 */
 	private static final String CLIENT_SECRET = "8484636cd03b487cb3390069b660dd9f";
+
+	/**
+	 * URI used to redirect user after authorization.
+	 */
 	private static final URI REDIRECT_URI = URI.create("http://localhost:8888/callback");
+
+	/**
+	 * SpotifyApi object created using CLIENT_ID, CLIENT_SECRET, and REDIRECT_URI.
+	 */
 	private static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
 			.setClientId(Methods.getClientId())
 			.setClientSecret(Methods.getClientSecret())
 			.setRedirectUri(Methods.getRedirectUri())
 			.build();
 
+	/** Getter for CLIENT_ID
+	 * @return String stored in CLIENT_ID
+	 */
 	public static String getClientId() {
 		return CLIENT_ID;
 	}
 
+	/** Getter for CLIENT_SECRET
+	 * @return String stored in CLIENT_SECRET
+	 */
 	public static String getClientSecret() {
 		return CLIENT_SECRET;
 	}
 
+	/** Getter for REDIRECT_URI
+	 * @return URI stored in REDIRECT_URI
+	 */
 	public static URI getRedirectUri() {
 		return REDIRECT_URI;
 	}
 
+	/** Getter for spotifyApi
+	 * @return SpotifyApi object stored in spotifyApi
+	 */
 	public static SpotifyApi getSpotifyApi() {
 		return spotifyApi;
 	}
 
-	//Method that reads file and extracts authCode to a string
+	
+	/**Reads auth code from file
+	 * @return String containing stored auth code
+	 * @throws IOException
+	 */
 	static String readCodeFromFile() throws IOException {
 		File file = new File("authorization_code.txt");
 		try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -50,7 +81,9 @@ class Methods {
 		}
 	}
 
-	//Builds URL that lets user login and access authCode
+	/** Builds URL that allows user to login to Spotify account
+	 * @return String containing URL for user authorization
+	 */
 	static String buildURL() {
 		final String SCOPES = "user-read-private user-read-email user-top-read";
 		return "https://accounts.spotify.com/authorize?" +
@@ -60,14 +93,20 @@ class Methods {
 				"&scope=" + URLEncoder.encode(SCOPES, StandardCharsets.UTF_8);
 	}
 
-	//Builds URL and prints it to console
+	/**
+	 * Builds URL and prints to console
+	 */
 	static void printURL() {
 		String authorizeUrl = Methods.buildURL();
 		System.out.println("Visit this URL to authorize app:");
 		System.out.println(authorizeUrl);
 	}
 
-	//Getter for authCode
+
+	/** Extracts auth code from URI object passed as arg
+	 * @param uri URI object returned from Spotify Authorization 
+	 * @return String containing auth code extracted from argument
+	 */
 	static String getAuthCode(URI uri) {
 		Map<String, String> queryParams = Stream.of(uri.getQuery().split("&"))
 				.map(pair -> pair.split("="))
@@ -75,7 +114,9 @@ class Methods {
 		return queryParams.get("code");
 	}
 
-	//Saves authCode to file
+	/** Saves auth code to file on server
+	 * @param code String representing the auth code to be saved
+	 */
 	static void saveAuthCode(String code) {
 		try {
 			File file = new File("authorization_code.txt");
@@ -89,7 +130,9 @@ class Methods {
 		}
 	}
 
-	//Saves refreshToken to file
+	/** Saves refresh code to file on server
+	 * @param refreshToken String representing the refresh token to save
+	 */
 	static void saveRefreshToken(String refreshToken) {
 		try {
 			File file = new File("refresh_token.txt");
@@ -103,7 +146,10 @@ class Methods {
 		}
 	}
 
-	//Reads refreshToken from the file
+	/** Reads stored refresh token from file 
+	 * @return String representing the stored refresh token
+	 * @throws IOException
+	 */
 	static String readRefreshTokenFromFile() throws IOException {
 		File file = new File("refresh_token.txt");
 		try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -111,7 +157,13 @@ class Methods {
 		}
 	}
 
-	//Refresh the accessToken using refreshToken
+	/** Aquires a new access token from Spotify using the current refresh token
+	 * @param refreshToken String representing the refresh token to be used in request for new access token
+	 * @return String representing new access token
+	 * @throws IOException
+	 * @throws SpotifyWebApiException
+	 * @throws ParseException
+	 */
 	static String refreshAccessToken(String refreshToken) throws IOException, SpotifyWebApiException, ParseException {
 		SpotifyApi spotifyApi = new SpotifyApi.Builder()
 				.setClientId(getClientId())

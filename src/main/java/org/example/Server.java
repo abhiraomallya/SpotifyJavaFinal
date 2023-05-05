@@ -129,15 +129,15 @@ class Server {
 		String authorizationCode = Methods.readCodeFromFile();
 		
 		// Creates an AuthorizationCode object from authorizationCode String and adds it to spotifyApi.
-		// Creates an AuthorizationCodeRequest object from updated SpotifyApi object used to obtain an AccessToken
-		// from Spotify authorization servers, as well as a RefreshToken. AccessToken is used for authorizing
-		// request to backend. Each request requires a unique AccessToken from Spotify, which is obtained via
-		// RefreshToken, allowing user to stay signed in and make repeated requests. 
+		// Creates an AuthorizationCodeRequest object from updated SpotifyApi object used to obtain an access token
+		// from Spotify authorization servers, as well as a refresh token. Access token is used for authorizing
+		// request to backend. Each request requires a unique access token from Spotify, which is obtained via
+		// refresh token, allowing user to stay signed in and make repeated requests. 
 		AuthorizationCodeRequest authorizationCodeRequest = spotifyApi.authorizationCode(authorizationCode).build();
 		try {
-			// AuthorizationCodeRequest returns an AuthorizationCodeCredentials object containing Access and Refresh
-			// Tokens. This extracts Access and Refresh tokens, stores the AccessToken in the SpotifyApi object, and 
-			// saves the RefreshToken to backend. 
+			// AuthorizationCodeRequest returns an AuthorizationCodeCredentials object containing access and refresh
+			// tokens. This extracts access and refresh tokens, stores the access token in the SpotifyApi object, and 
+			// saves the refresh token to backend. 
 			AuthorizationCodeCredentials authorizationCodeCredentials = authorizationCodeRequest.execute();
 			spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
 			Methods.saveRefreshToken(authorizationCodeCredentials.getRefreshToken()); // Save the refresh token
@@ -147,7 +147,7 @@ class Server {
 			throw new RuntimeException(e);
 		}
 
-		// Refresh the AccessToken if necessary using the RefreshToken
+		// Refresh the access token if necessary using the refresh token
 		String refreshToken = Methods.readRefreshTokenFromFile();
 		String newAccessToken = Methods.refreshAccessToken(refreshToken);
 		spotifyApi.setAccessToken(newAccessToken);
@@ -207,7 +207,7 @@ class Server {
 		// Creates SpotifyApi object
 		SpotifyApi spotifyApi = Methods.getSpotifyApi();
 
-		// Refreshs AccessToken if necessary using RefreshToken
+		// Refreshs access token if necessary using RefreshToken
 		String refreshToken = Methods.readRefreshTokenFromFile();
 		String newAccessToken = Methods.refreshAccessToken(refreshToken);
 		spotifyApi.setAccessToken(newAccessToken);
