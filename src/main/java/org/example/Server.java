@@ -80,9 +80,13 @@ class Server {
 		/**
 		 * Overide of handle method for handling response HttpExchange after user authorization.
 		 * After user signs into Spotify account, they are redirected to /callback context. 
-		 * This redirection includes the users auth code in the URL, necessary for communicating with the
-		 * Spotify API. This method first extracts the users auth code from the url and saves it to a file
-		 * before redirecting the user to the main page of the frontend.
+		 * This redirection comes in the form of a HttpExchange from the Spotify authorization servers.
+		 * This exchange includes a URI used to redirect the user to the website after signing in their
+		 * spotify account. The URI includes a code used for authorizing subsequent requests to the 
+		 * Spotify API. 
+		 * This method first extracts the URI included in the HttpExchange passed as an argument. It 
+		 * then extracts the auth code from the URI object and saves it to a file on the backend. Finally,
+		 * it sends a script to the frontend to redirect the user to main.html.
 		 * @param exchange HttpExchange returned from authorization server after user is authorized
 		 * @throws IOException
 		 */
@@ -90,7 +94,9 @@ class Server {
 		public void handle(HttpExchange exchange) throws IOException {
 			URI requestURI = exchange.getRequestURI();
 			String code = Methods.getAuthCode(requestURI);
-
+			// If an auth code is present in URI, saves to backend and returns a brief response to frontend 
+			// before redirecting user to main.html. Otherwise, displays a page notifying user of failure to 
+			// authorize.
 			if (code != null) {
 				Methods.saveAuthCode(code);
 				String response = "<html><body><h1 id='verified'>Authorization successful.</h1></body>"+
@@ -109,15 +115,30 @@ class Server {
 		}
 	}
 
-
+	/**
+	 * Static method for making a request to the Spotify API for users top Artists in a given time range.
+	 * 
+	 * @param timeRange
+	 * @return
+	 * @throws Exception
+	 */
 	public static List<String> getTopArtists(String timeRange) throws Exception {
+		// Creates SotifyApi object from authorized user credentials
 		SpotifyApi spotifyApi = Methods.getSpotifyApi();
 
-		// reads authCode from the file
+		// Reads authCode from the file
 		String authorizationCode = Methods.readCodeFromFile();
-		// utilizes authCode to make API requests
+		
+		// Creates an AuthorizationCode object from authorizationCode String and adds it to spotifyApi.
+		// Creates an AuthorizationCodeRequest object from updated SpotifyApi object used to obtain an AccessToken
+		// from Spotify authorization servers, as well as a RefreshToken. AccessToken is used for authorizing
+		// request to backend. Each request requires a unique AccessToken from Spotify, which is obtained via
+		// RefreshToken, allowing user to stay signed in and make repeated requests. 
 		AuthorizationCodeRequest authorizationCodeRequest = spotifyApi.authorizationCode(authorizationCode).build();
 		try {
+			// AuthorizationCodeRequest returns an AuthorizationCodeCredentials object containing Access and Refresh
+			// Tokens. This extracts Access and Refresh tokens, stores the AccessToken in the SpotifyApi object, and 
+			// saves the RefreshToken to backend. 
 			AuthorizationCodeCredentials authorizationCodeCredentials = authorizationCodeRequest.execute();
 			spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
 			Methods.saveRefreshToken(authorizationCodeCredentials.getRefreshToken()); // Save the refresh token
@@ -127,16 +148,18 @@ class Server {
 			throw new RuntimeException(e);
 		}
 
-		// Refresh the access token if necessary using the refresh token
+		// Refresh the AccessToken if necessary using the RefreshToken
 		String refreshToken = Methods.readRefreshTokenFromFile();
 		String newAccessToken = Methods.refreshAccessToken(refreshToken);
 		spotifyApi.setAccessToken(newAccessToken);
 
-		// get top artists of that user over a given term
+		// Create a GetUsersTopArtistsRequest object from SpotifyApi object for querying Spotify servers
+		// using time range passed as argument.
 		GetUsersTopArtistsRequest getUsersTopArtistsRequest = spotifyApi.getUsersTopArtists()
 				.time_range(timeRange)
 				.limit(10) // set number of top artists to retrieve
 				.build();
+		//Executes request, which returns a Paging object of Artist objects 
 		Paging<Artist> artists = getUsersTopArtistsRequest.execute();
 
 		// extract artist names and add to list
