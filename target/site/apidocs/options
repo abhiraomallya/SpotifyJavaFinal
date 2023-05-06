@@ -1,0 +1,24 @@
+-classpath
+'C:/Users/Ron/.m2/repository/se/michaelthelin/spotify/spotify-web-api-java/8.0.0/spotify-web-api-java-8.0.0.jar;C:/Users/Ron/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.14.2/jackson-databind-2.14.2.jar;C:/Users/Ron/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.14.2/jackson-annotations-2.14.2.jar;C:/Users/Ron/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.14.2/jackson-core-2.14.2.jar;C:/Users/Ron/.m2/repository/com/neovisionaries/nv-i18n/1.29/nv-i18n-1.29.jar;C:/Users/Ron/.m2/repository/org/apache/httpcomponents/client5/httpclient5-cache/5.2.1/httpclient5-cache-5.2.1.jar;C:/Users/Ron/.m2/repository/org/apache/httpcomponents/client5/httpclient5/5.2.1/httpclient5-5.2.1.jar;C:/Users/Ron/.m2/repository/org/apache/httpcomponents/core5/httpcore5/5.2/httpcore5-5.2.jar;C:/Users/Ron/.m2/repository/org/apache/httpcomponents/core5/httpcore5-h2/5.2/httpcore5-h2-5.2.jar;C:/Users/Ron/.m2/repository/org/slf4j/slf4j-api/2.0.6/slf4j-api-2.0.6.jar;C:/Users/Ron/.m2/repository/ch/qos/logback/logback-classic/1.4.6/logback-classic-1.4.6.jar;C:/Users/Ron/.m2/repository/ch/qos/logback/logback-core/1.4.6/logback-core-1.4.6.jar;C:/Users/Ron/.m2/repository/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar'
+-encoding
+'UTF-8'
+-protected
+-source
+'20'
+-sourcepath
+'D:/Documents/CIS111B/Java_Projects/SpotifyJavaDemoGit/src/main/java'
+-author
+-bottom
+'Copyright &#169; 2023. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'D:/Documents/CIS111B/Java_Projects/SpotifyJavaDemoGit/target/site/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'spotifyproject 1.0-SNAPSHOT API'
+-use
+-version
+-windowtitle
+'spotifyproject 1.0-SNAPSHOT API'
