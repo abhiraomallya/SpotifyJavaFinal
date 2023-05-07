@@ -84,7 +84,7 @@ public class Methods {
 		}
 	}
 
-	/** Builds URL that allows user to login to Spotify account
+	/** Builds URL that allows user to log in to Spotify account
 	 * @return String containing URL for user authorization
 	 */
 	public static String buildURL() {
@@ -160,7 +160,7 @@ public class Methods {
 		}
 	}
 
-	/** Aquires a new access token from Spotify using the current refresh token
+	/** Acquires a new access token from Spotify using the current refresh token
 	 * @param refreshToken String representing the refresh token to be used in request for new access token
 	 * @return String representing new access token
 	 * @throws IOException

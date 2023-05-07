@@ -55,9 +55,10 @@ public class Server {
 	 */
 	public static class InitialHandler implements HttpHandler {
 		/**
-		 * Overide of handle method for handling an exchange with the frontend. Takes an HttpExchange object as an 
-		 * argument and sends a very simple html page to the front end with a message notifying user that the 
+		 * Override of handle method for handling an exchange with the frontend. Takes an HttpExchange object as an
+		 * argument and sends a simple html page to the front end with a message notifying user that the
 		 * server has launched correctly.
+		 *
 		 * @param exchange HttpExchange object sent from frontend
 		 * @throws IOException
 		 */
@@ -77,15 +78,16 @@ public class Server {
 	 */
 	public static class CallbackHandler implements HttpHandler {
 		/**
-		 * Overide of handle method for handling response HttpExchange after user authorization.
-		 * After user signs into Spotify account, they are redirected to /callback context. 
+		 * Override of handle method for handling response HttpExchange after user authorization.
+		 * After user signs into Spotify account, they are redirected to /callback context.
 		 * This redirection comes in the form of a HttpExchange from the Spotify authorization servers.
 		 * This exchange includes a URI used to redirect the user to the website after signing in their
-		 * spotify account. The URI includes a code used for authorizing subsequent requests to the 
-		 * Spotify API. 
-		 * This method first extracts the URI included in the HttpExchange passed as an argument. It 
+		 * spotify account. The URI includes a code used for authorizing subsequent requests to the
+		 * Spotify API.
+		 * This method first extracts the URI included in the HttpExchange passed as an argument. It
 		 * then extracts the auth code from the URI object and saves it to a file on the backend. Finally,
 		 * it sends a script to the frontend to redirect the user to main.html.
+		 *
 		 * @param exchange HttpExchange returned from authorization server after user is authorized
 		 * @throws IOException
 		 */
@@ -98,8 +100,8 @@ public class Server {
 			// authorize.
 			if (code != null) {
 				Methods.saveAuthCode(code);
-				String response = "<html><body><h1 id='verified'>Authorization successful.</h1></body>"+
-				"<script>window.location.href='https://getlucky13.github.io/SpotifyStats/main.html'</script></html>";
+				String response = "<html><body><h1 id='verified'>Authorization successful.</h1></body>" +
+						"<script>window.location.href='https://getlucky13.github.io/SpotifyStats/main.html'</script></html>";
 				exchange.sendResponseHeaders(200, response.length());
 				OutputStream os = exchange.getResponseBody();
 				os.write(response.getBytes());
@@ -116,18 +118,19 @@ public class Server {
 
 	/**
 	 * Static method for making a request to the Spotify API for users top artists in a given time range.
+	 *
 	 * @param timeRange String used for setting the time range of request sent
-	 * @return List<String> containg the names of the users top artists over the given time range, in order.
+	 * @return List<String> containing the names of the users top artists over the given time range, in order.
 	 * @throws Exception
 	 */
 	public static List<String> getTopArtists(String timeRange) throws Exception {
 
-		// Creates SotifyApi object
+		// Creates spotifyAPI object
 		SpotifyApi spotifyApi = Methods.getSpotifyApi();
 
 		// Reads authCode from the file
 		String authorizationCode = Methods.readCodeFromFile();
-		
+
 		// Creates an AuthorizationCode object from authorizationCode String and adds it to spotifyApi.
 		// Creates an AuthorizationCodeRequest object from updated SpotifyApi object used to obtain an access token
 		// from Spotify authorization servers, as well as a refresh token. Access token is used for authorizing
@@ -181,6 +184,7 @@ public class Server {
 	public static class TopArtistsHandler extends BaseHandler {
 		/**
 		 * Constructor that creates a TopArtistsHandler object with a given time range
+		 *
 		 * @param timeRange String value representing the time range of the requested data
 		 */
 		public TopArtistsHandler(String timeRange) {
@@ -198,16 +202,18 @@ public class Server {
 	}
 
 
-	/** Static method for making a request to the Spotify API for users top Tracks in a given time range.
+	/**
+	 * Static method for making a request to the Spotify API for users top Tracks in a given time range.
+	 *
 	 * @param timeRange String value representing the time range to use for request
-	 * @return List<String> where each String contains the track name and artists of each Track object. 
+	 * @return List<String> where each String contains the track name and artists of each Track object.
 	 * @throws Exception
 	 */
 	public static List<String> getTopTracks(String timeRange) throws Exception {
 		// Creates SpotifyApi object
 		SpotifyApi spotifyApi = Methods.getSpotifyApi();
 
-		// Refreshs access token if necessary using RefreshToken
+		// Refreshes access token if necessary using RefreshToken
 		String refreshToken = Methods.readRefreshTokenFromFile();
 		String newAccessToken = Methods.refreshAccessToken(refreshToken);
 		spotifyApi.setAccessToken(newAccessToken);
@@ -255,7 +261,7 @@ public class Server {
 
 		/**
 		 * Implementation of abstract method getData from BaseHandler base class.
-		 * Calls getTopTrackss using the timeRange field of the TopArtistsHandler class.
+		 * Calls getTopTracks using the timeRange field of the TopArtistsHandler class.
 		 */
 		@Override
 		protected List<String> getData(String timeRange) throws Exception {
@@ -270,14 +276,18 @@ public class Server {
 	public abstract static class BaseHandler implements HttpHandler {
 		protected final String timeRange;
 
-		/** Constructor for creating a BaseHandler with a given time range
+		/**
+		 * Constructor for creating a BaseHandler with a given time range
+		 *
 		 * @param timeRange String value stored in timeRange field
 		 */
 		public BaseHandler(String timeRange) {
 			this.timeRange = timeRange;
 		}
 
-		/**Abstract method to be used for handling GET requests from frontend for data from Spotify API.
+		/**
+		 * Abstract method to be used for handling GET requests from frontend for data from Spotify API.
+		 *
 		 * @param timeRange String value representing time range of requested data
 		 * @return List<String> representing the requested date from Spotify API
 		 * @throws Exception
